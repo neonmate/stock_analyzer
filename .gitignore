@@ -1,0 +1,3 @@
+db/*
+!db/test*
+.DS_Store
