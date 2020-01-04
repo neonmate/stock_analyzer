@@ -9,6 +9,7 @@ require_relative 'stock_analyzer/single_trade_profit_analyzer'
 require_relative 'stock_analyzer/maximum_profit_analyzer'
 require_relative 'stock_analyzer/normalizer'
 require_relative 'stock_analyzer/helpers'
+require_relative 'stock_analyzer/symbol_lookup'
 
 class StockAnalyzer
 
@@ -17,32 +18,41 @@ class StockAnalyzer
   def self.available_stocks
     entries = Dir.glob(File.join(ROOT, 'db', '*.txt'))
     Parallel.map(entries) do |file|
-      if File.foreach(file).count > 3 && !file.end_with?('.normalized.txt') && !file.start_with?('test')
-        Pathname(file).basename.to_s[/\A([^\.]+)/, 1]
+      filename = Pathname(file).basename.to_s
+      if File.foreach(file).count > 3 && !filename.end_with?('.normalized.txt') && !filename.start_with?('test')
+        filename[/\A([^\.]+)/, 1]
       end
     end.compact
   end
 
-  def self.normalized_file(stock_name, region)
-    File.join(ROOT, 'db', "#{stock_name}.#{region}.normalized.txt")
+  def self.normalized_file(stock_symbol, region)
+    File.join(ROOT, 'db', "#{stock_symbol}.#{region}.normalized.txt")
   end
 
-  def self.original_file(stock_name, region)
-    File.join(ROOT, 'db', "#{stock_name}.#{region}.txt")
+  def self.original_file(stock_symbol, region)
+    File.join(ROOT, 'db', "#{stock_symbol}.#{region}.txt")
   end
 
-  def self.print_ranking(title:, stock_names:, start_date:, end_date:, region: 'us', analytics_method:, limit: 100)
-    analytics = Parallel.map(stock_names) do |stock_name|
-      new(stock_name, start_date: start_date, end_date: end_date, region: region).public_send(analytics_method)
+  def self.print_ranking(title:, stock_symbols:, start_date:, end_date:, region: 'us', analytics_method:, limit: 100)
+    analytics = Parallel.map(stock_symbols) do |stock_symbol|
+      new(stock_symbol, start_date: start_date, end_date: end_date, region: region).public_send(analytics_method)
     end
 
     analytics = analytics.reduce(&:merge)
     analytics = analytics.sort_by { |_key, value| -value }
-    analytics = analytics.map.with_index(1) { |analytic, index| analytic.unshift("#{index}.") }
+    analytics = analytics.map.with_index(1) do |(stock_symbol, profit), index|
+      [
+        "#{index}.",
+        stock_symbol,
+        SymbolLookup.instance.lookup(stock_symbol),
+        profit,
+
+      ]
+    end
 
     puts Terminal::Table.new(
       title: title,
-      headings: ['Rank', 'Stock name', 'Profit'],
+      headings: ['Rank', 'Symbol', 'Name', 'Profit'],
       rows: analytics.first(limit),
     )
   end

@@ -11,7 +11,7 @@ describe Normalizer do
         described_class.new(
           start_date: start_date,
           end_date: end_date,
-          stock_name: 'test3',
+          stock_symbol: 'test3',
           output: normalized_file,
         ).normalize
 
@@ -50,7 +50,7 @@ describe Normalizer do
         described_class.new(
           start_date: start_date - 2.days,
           end_date: end_date + 2.days,
-          stock_name: 'test3',
+          stock_symbol: 'test3',
           output: normalized_file,
         ).normalize
 

@@ -1,11 +1,11 @@
 class MaximumProfitAnalyzer
 
-  attr_accessor :start_date, :end_date, :stock_name, :stock_quotes
+  attr_accessor :start_date, :end_date, :stock_symbol, :stock_quotes
 
-  def initialize(start_date, end_date, stock_name, stock_quotes)
+  def initialize(start_date, end_date, stock_symbol, stock_quotes)
     self.start_date = start_date
     self.end_date = end_date
-    self.stock_name = stock_name
+    self.stock_symbol = stock_symbol
     self.stock_quotes = stock_quotes
   end
 
@@ -31,7 +31,7 @@ class MaximumProfitAnalyzer
       end
     end
 
-    { stock_name => profits[maximum_transactions][prices.size - 1] }
+    { stock_symbol => profits[maximum_transactions][prices.size - 1] }
   end
 
 end

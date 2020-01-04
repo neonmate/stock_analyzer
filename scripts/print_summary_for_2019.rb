@@ -11,7 +11,7 @@ config = {
 
 start_time = Time.now
 
-puts "> Reading stocks"
+puts '> Reading stocks'
 stocks = StockAnalyzer.available_stocks
 puts "> Finished in #{Helpers.passed_time(start_time)}"
 
@@ -20,11 +20,11 @@ puts
 if config.fetch(:normalize)
   puts "> Normalize #{stocks.size} stocks"
 
-  stocks.each do |stock_name|
+  stocks.each do |stock_symbol|
     Normalizer.new(
       start_date: config.fetch(:start_date),
       end_date: config.fetch(:end_date),
-      stock_name: stock_name,
+      stock_symbol: stock_symbol,
     ).normalize
   end
 
@@ -38,7 +38,7 @@ if config.fetch(:analyze_single_trade_profit)
 
   StockAnalyzer.print_ranking(
     title: "Single trade profit from #{config.fetch(:start_date)} to #{config.fetch(:end_date)}",
-    stock_names: stocks,
+    stock_symbols: stocks,
     start_date: config.fetch(:start_date),
     end_date: config.fetch(:end_date),
     analytics_method: :analyze_single_trade_profit,
@@ -54,7 +54,7 @@ if config.fetch(:analyze_maximum_profit)
 
   StockAnalyzer.print_ranking(
     title: "Maximum profit from #{config.fetch(:start_date)} to #{config.fetch(:end_date)}",
-    stock_names: stocks,
+    stock_symbols: stocks,
     start_date: config.fetch(:start_date),
     end_date: config.fetch(:end_date),
     analytics_method: :analyze_maximum_profit,

@@ -1,14 +1,14 @@
 class Normalizer
 
-  attr_accessor :start_date, :end_date, :stock_name, :region, :normalized_file, :original_file
+  attr_accessor :start_date, :end_date, :stock_symbol, :region, :normalized_file, :original_file
 
-  def initialize(start_date:, end_date:, stock_name:, region: 'us', output: nil)
+  def initialize(start_date:, end_date:, stock_symbol:, region: 'us', output: nil)
     self.start_date = start_date
     self.end_date = end_date
-    self.stock_name = stock_name
+    self.stock_symbol = stock_symbol
     self.region = region
-    self.normalized_file = output.present? ? output : StockAnalyzer.normalized_file(stock_name, region)
-    self.original_file = StockAnalyzer.original_file(stock_name, region)
+    self.normalized_file = output.present? ? output : StockAnalyzer.normalized_file(stock_symbol, region)
+    self.original_file = StockAnalyzer.original_file(stock_symbol, region)
   end
 
   def normalize

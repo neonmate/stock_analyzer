@@ -1,6 +1,6 @@
 # Stock analyzer
 
-This program can analyze Stooq historical stock data in terms of profit:
+This program can analyze NASDAQ's historical stock data in terms of profit:
 
 * Stocks ordered by maximum theoretical profit (multiple purchases and sells)
 * Stocks ordered by maximum profit from January 1st to December 31th (single purchase and sell)
@@ -11,9 +11,10 @@ This program can analyze Stooq historical stock data in terms of profit:
 * Install bundler `gem install bundler -v '~>2'`
 * Bundle the project `bundle install`
 
-[Download](https://stooq.com/db/h/) a free dump of historical stock data. In the example below we used the dump from 
-[US Daily](https://stooq.com/db/d/?b=d_us_txt) with the NASDAQ stocks, so that the `db/` folder contains the extracted files 
-`aacg.us.txt`, `aal.us.txt` and so on.
+* [Download](https://stooq.com/db/h/) a free dump of historical stock data for the daily US NASDAQ, so that the `db/`
+folder contains the extracted files `aacg.us.txt`, `aal.us.txt` and so on.
+* [Download](ftp://ftp.nasdaqtrader.com/symboldirectory) the `nasdaqlisted.txt`, rename it to `nasdaqlisted.csv` and
+place it in the `db/` folder, too.
 
 Now you can analyze a list of stocks over a given period:
 
