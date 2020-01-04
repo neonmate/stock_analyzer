@@ -1,6 +1,7 @@
 require 'active_support/all'
 require 'csv'
 require 'date'
+require 'parallel'
 require 'terminal-table'
 
 require_relative 'stock_analyzer/stock_quote'
@@ -14,11 +15,12 @@ class StockAnalyzer
   ROOT = File.expand_path('..', __dir__)
 
   def self.available_stocks
-    Dir.glob(File.join(ROOT, 'db', '*.txt')).each_with_object([]) do |file, array|
+    entries = Dir.glob(File.join(ROOT, 'db', '*.txt'))
+    Parallel.map(entries) do |file|
       if File.foreach(file).count > 3 && !file.end_with?('.normalized.txt') && !file.start_with?('test')
-        array << Pathname(file).basename.to_s[/\A([^\.]+)/, 1]
+        Pathname(file).basename.to_s[/\A([^\.]+)/, 1]
       end
-    end
+    end.compact
   end
 
   def self.normalized_file(stock_name, region)
@@ -30,11 +32,11 @@ class StockAnalyzer
   end
 
   def self.print_ranking(title:, stock_names:, start_date:, end_date:, region: 'us', analytics_method:, limit: 100)
-    analytics = stock_names.each_with_object({}) do |stock_name, object|
-      object.merge!(
-        new(stock_name, start_date: start_date, end_date: end_date, region: region).public_send(analytics_method),
-      )
+    analytics = Parallel.map(stock_names) do |stock_name|
+      new(stock_name, start_date: start_date, end_date: end_date, region: region).public_send(analytics_method)
     end
+
+    analytics = analytics.reduce(&:merge)
     analytics = analytics.sort_by { |_key, value| -value }
     analytics = analytics.map.with_index(1) { |analytic, index| analytic.unshift("#{index}.") }
 

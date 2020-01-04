@@ -12,7 +12,7 @@ config = {
 start_time = Time.now
 
 puts "> Reading stocks"
-stocks = StockAnalyzer.available_stocks.first(3)
+stocks = StockAnalyzer.available_stocks
 puts "> Finished in #{Helpers.passed_time(start_time)}"
 
 puts
