@@ -2,8 +2,8 @@
 
 This program can analyze NASDAQ's historical stock data in terms of profit:
 
-* Stocks ordered by maximum theoretical profit (multiple purchases and sells)
-* Stocks ordered by maximum profit from January 1st to December 31th (single purchase and sell)
+* Stocks ordered by single trade profit (single purchase and sell)
+* Stocks ordered by maximum profit (multiple purchases and sells)
 
 ## Usage
 
