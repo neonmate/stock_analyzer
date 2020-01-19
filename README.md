@@ -28,7 +28,7 @@ try to normalize the missing values to avoid a crashing of the program.
 ## Example output
 
 ```
-ruby scripts/print_summary_for_2019.rb
+ruby scripts/print_summary.rb
 
 > Reading stocks
 > Finished in 10 seconds 358 milliseconds
@@ -61,6 +61,10 @@ ruby scripts/print_summary_for_2019.rb
 > Finished in 12 seconds 596 milliseconds
 > All operations finished.
 ```
+
+# Links
+
+* [2019 analysis](analysis/2019.md)
 
 # Tests
 
