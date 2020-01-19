@@ -64,6 +64,7 @@ ruby scripts/print_summary.rb
 
 # Links
 
+* [2018 analysis](analysis/2018.md)
 * [2019 analysis](analysis/2019.md)
 
 # Tests
