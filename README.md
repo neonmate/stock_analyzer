@@ -3,7 +3,26 @@
 This program can analyze NASDAQ's historical stock data in terms of profit:
 
 * Stocks ordered by single trade profit (single purchase and sell)
+
+  Example:
+
+  | Day 1 | Day 2 | Day 3 | Day 4 |
+  |-------|-------|-------|-------|
+  | 2     | 4     | 8     | 1     |
+
+  They single trade profit between day 1 and day 4 is `1 - 2 = -1`.
+  Between day 1 and day 2 it is `8 - 2 = 6`.
+
 * Stocks ordered by maximum profit (multiple purchases and sells)
+
+  Example:
+
+  | Day 1 | Day 2 | Day 3 | Day 4 | Day 5 | Day 6 |
+  |-------|-------|-------|-------|-------|-------|
+  | 2     | 4     | 8     | 1     | 9     | 8     |
+
+  The maximum profit between day 1 and day 6 is `(8 - 2) + (9 - 1) = 14` (Buying on day 1, selling on day 3, buying on day 4 and selling on day 5).
+  Between day 1 and day 4 it is `8 - 2 = 6` (Buying on day 1, selling on day 3).
 
 ## Usage
 
@@ -11,56 +30,54 @@ This program can analyze NASDAQ's historical stock data in terms of profit:
 * Install bundler `gem install bundler -v '~>2'`
 * Bundle the project `bundle install`
 
-* [Download](https://stooq.com/db/h/) a free dump of historical stock data for the daily US NASDAQ, so that the `db/`
-folder contains the extracted files `aacg.us.txt`, `aal.us.txt` and so on.
-* [Download](ftp://ftp.nasdaqtrader.com/symboldirectory) the `nasdaqlisted.txt`, rename it to `nasdaqlisted.csv` and
-place it in the `db/` folder, too.
+* [Download](https://stooq.com/db/h/) a free dump of historical stock data for "US (daily)". Extract the ZIP and move all files
+  from the folder "nasdaq stocks" to the `db` folder in the project, so that folder contains the files `aacg.us.txt`, `aal.us.txt` and so on.
+* Download the `nasdaqlisted.txt` from ftp://ftp.nasdaqtrader.com/symboldirectory, rename it to `nasdaqlisted.csv` and
+  place it in the `db/` folder, too.
 
-Now you can analyze a list of stocks over a given period:
-
-```
-bin/runner "StockAnalyzer.print(['amzn'], start_date: Date.parse('2019-01-01'), end_date: Date.parse('2019-12-31'))""
-```
-
-Note: The historical stock data from Stooq has missing days, so the results will never be 100% accurate. The scripts
-try to normalize the missing values to avoid a crashing of the program.
-
-## Example output
+Now you can analyze a a stock over a given period:
 
 ```
-ruby scripts/print_summary.rb
+bin/runner "puts StockAnalyzer.new('amzn', start_date: Date.parse('2020-01-01'), end_date: Date.parse('2020-09-01')).analyze_single_trade_profit"
 
-> Reading stocks
-> Finished in 10 seconds 358 milliseconds
-
-> Normalize 3 stocks
-> Finished in 10 seconds 978 milliseconds
-
-> Analyze single trade profit for 3 stocks
-+-----------------+----------------+----------------+
-| Single trade profit from 2019-01-01 to 2019-12-31 |
-+-----------------+----------------+----------------+
-| Rank            | Stock name     | Profit         |
-+-----------------+----------------+----------------+
-| 1.              | flic           | 5.735          |
-| 2.              | opnt           | 0.97           |
-| 3.              | grvy           | -4.91          |
-+-----------------+----------------+----------------+
-> Finished in 11 seconds 328 milliseconds
-
-> Analyze maximum profit for 3 stocks
-+---------------+---------------+--------------+
-| Maximum profit from 2019-01-01 to 2019-12-31 |
-+---------------+---------------+--------------+
-| Rank          | Stock name    | Profit       |
-+---------------+---------------+--------------+
-| 1.            | grvy          | 207.7838     |
-| 2.            | opnt          | 40.419       |
-| 3.            | flic          | 30.383       |
-+---------------+---------------+--------------+
-> Finished in 12 seconds 596 milliseconds
-> All operations finished.
+{"amzn"=>0.145299e4}
 ```
+
+```
+bin/runner "puts StockAnalyzer.new('amzn', start_date: Date.parse('2020-01-01'), end_date: Date.parse('2020-09-01')).analyze_maximum_profit"
+
+{"amzn"=>0.4634536e4}
+```
+
+Or compare a list of stocks over a given period:
+
+```
+bin/runner "StockAnalyzer.print_ranking(title: 'My single trade comparision for Amamzon and AMD', stock_symbols: ['amzn', 'amd'], start_date: Date.parse('2020-01-01'), end_date: Date.parse('2020-09-01'), analytics_method: :analyze_single_trade_profit)"
+
++------+--------+---------------------------------------------+---------+
+|            My single trade comparision for Amamzon and AMD            |
++------+--------+---------------------------------------------+---------+
+| Rank | Symbol | Name                                        | Profit  |
++------+--------+---------------------------------------------+---------+
+| 1.   | amzn   | Amazon.com, Inc. - Common Stock             | 1452.99 |
+| 2.   | amd    | Advanced Micro Devices, Inc. - Common Stock | 38.29   |
++------+--------+---------------------------------------------+---------+
+```
+
+```
+bin/runner "StockAnalyzer.print_ranking(title: 'My maximum profit comparision for Amamzon and AMD', stock_symbols: ['amzn', 'amd'], start_date: Date.parse('2020-01-01'), end_date: Date.parse('2020-09-01'), analytics_method: :analyze_maximum_profit)"
+
++------+--------+---------------------------------------------+----------+
+|           My maximum profit comparision for Amamzon and AMD            |
++------+--------+---------------------------------------------+----------+
+| Rank | Symbol | Name                                        | Profit   |
++------+--------+---------------------------------------------+----------+
+| 1.   | amzn   | Amazon.com, Inc. - Common Stock             | 4634.536 |
+| 2.   | amd    | Advanced Micro Devices, Inc. - Common Stock | 154.5521 |
++------+--------+---------------------------------------------+----------+
+```
+
+Or run `ruby scripts/print_summary` to get a summary of all stocks available in the NASDAQ stock index.
 
 # Links
 
@@ -70,4 +87,4 @@ ruby scripts/print_summary.rb
 
 # Tests
 
-The test will use the imaginary `db/test*.us.txt` historical data dumps. Execute `rake` to run all RSpec tests.
+Execute `rake` to run all RSpec tests.

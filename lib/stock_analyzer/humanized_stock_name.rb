@@ -1,8 +1,8 @@
-class SymbolLookup
+class HumanizedStockName
   include Singleton
 
   def self.lookup_database
-    File.join(StockAnalyzer::ROOT, 'db', 'nasdaqlisted.csv')
+    StockAnalyzer::DATABASE_DIRECTORY.join('nasdaqlisted.csv')
   end
 
   attr_accessor :store
@@ -17,7 +17,7 @@ class SymbolLookup
     end
   end
 
-  def lookup(symbol)
-    store.fetch(symbol, 'Unknown Company')
+  def lookup(stock_symbol)
+    store.fetch(stock_symbol, 'Unknown Company')
   end
 end

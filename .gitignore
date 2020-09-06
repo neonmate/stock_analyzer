@@ -1,4 +1,3 @@
-db/*
-!db/test*
-!db/nasdaqlisted.test.csv
+/db/*
+!/db/.gitkeep
 .DS_Store

@@ -1,19 +1,20 @@
 class SingleTradeProfitAnalyzer
 
-  attr_accessor :start_date, :end_date, :stock_symbol, :stock_quotes
+  attr_accessor :stock_symbol, :stock_quotes
 
-  def initialize(start_date, end_date, stock_symbol, stock_quotes)
-    self.start_date = start_date
-    self.end_date = end_date
+  def initialize(stock_symbol:, stock_quotes:)
     self.stock_symbol = stock_symbol
     self.stock_quotes = stock_quotes
   end
 
   def analyze
-    bought_for = stock_quotes.find { |stock_quote| stock_quote.date == start_date }.open
-    sold_for = stock_quotes.find { |stock_quote| stock_quote.date == end_date }.open
+    total = if stock_quotes.present?
+      stock_quotes.last.open - stock_quotes.first.open
+    else
+      BigDecimal('0')
+    end
 
-    { stock_symbol => sold_for - bought_for }
+    { stock_symbol => total }
   end
 
 end

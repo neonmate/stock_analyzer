@@ -3,6 +3,7 @@
 require 'pry'
 
 require_relative '../lib/stock_analyzer'
+Dir[StockAnalyzer::ROOT.join('spec/support/**/*.rb')].sort.each { |file| require file }
 
 RSpec.configure do |config|
   config.expect_with :rspec do |expectations|

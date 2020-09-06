@@ -5,12 +5,6 @@ describe StockAnalyzer do
     let(:end_date) { Date.parse('2019-11-25') }
     let(:stock_symbols) { ['test1', 'test2'] }
 
-    before do
-      allow(SymbolLookup).to receive(:lookup_database).and_return(
-        File.join(StockAnalyzer::ROOT, 'db', 'nasdaqlisted.test.csv'),
-      )
-    end
-
     it 'allows to print the single trade profit as table' do
       arguments = {
         title: 'Single trade profit',
@@ -26,8 +20,8 @@ describe StockAnalyzer do
         +------+--------+----------------+--------+
         | Rank | Symbol | Name           | Profit |
         +------+--------+----------------+--------+
-        | 1.   | test2  | Test Company 2 | 29.28  |
-        | 2.   | test1  | Test Company 1 | -1.92  |
+        | 1.   | test2  | Test Company 2 | 3.44   |
+        | 2.   | test1  | Test Company 1 | -34.64 |
         +------+--------+----------------+--------+
       TEXT
     end
@@ -47,8 +41,8 @@ describe StockAnalyzer do
         +------+--------+----------------+--------+
         | Rank | Symbol | Name           | Profit |
         +------+--------+----------------+--------+
-        | 1.   | test2  | Test Company 2 | 32.54  |
-        | 2.   | test1  | Test Company 1 | 1.34   |
+        | 1.   | test1  | Test Company 1 | 41.54  |
+        | 2.   | test2  | Test Company 2 | 5.43   |
         +------+--------+----------------+--------+
       TEXT
     end
@@ -61,7 +55,7 @@ describe StockAnalyzer do
     it 'returns the profits for buying at the start date and selling at the end date' do
       analyzer = StockAnalyzer.new('test1', start_date: start_date, end_date: end_date)
 
-      expect(analyzer.analyze_single_trade_profit).to eq('test1' => BigDecimal('-0.192e1'))
+      expect(analyzer.analyze_single_trade_profit).to eq('test1' => BigDecimal('-34.64'))
     end
   end
 
@@ -72,7 +66,7 @@ describe StockAnalyzer do
     it 'returns the maximum profit you can reach for unlimited trades between the start and end date' do
       analyzer = StockAnalyzer.new('test1', start_date: start_date, end_date: end_date)
 
-      expect(analyzer.analyze_maximum_profit).to eq('test1' => BigDecimal('0.134e1'))
+      expect(analyzer.analyze_maximum_profit).to eq('test1' => BigDecimal('41.54'))
     end
   end
 

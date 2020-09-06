@@ -14,4 +14,8 @@ class StockQuote
     self.open = open
   end
 
+  def relevant?(start_date, end_date)
+    date.between?(start_date, end_date) && open.present?
+  end
+
 end

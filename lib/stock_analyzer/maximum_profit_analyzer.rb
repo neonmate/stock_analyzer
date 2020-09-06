@@ -1,17 +1,18 @@
 class MaximumProfitAnalyzer
 
-  attr_accessor :start_date, :end_date, :stock_symbol, :stock_quotes
+  attr_accessor :stock_symbol, :stock_quotes
 
-  def initialize(start_date, end_date, stock_symbol, stock_quotes)
-    self.start_date = start_date
-    self.end_date = end_date
+  def initialize(stock_symbol:, stock_quotes:)
     self.stock_symbol = stock_symbol
     self.stock_quotes = stock_quotes
   end
 
   # Adapted from https://www.algoexpert.io/questions/Max%20Profit%20With%20K%20Transactions
   def analyze
-    prices = stock_quotes.select { |stock_quote| (start_date..end_date).cover?(stock_quote.date) }.map(&:open)
+    return result(BigDecimal('0')) if stock_quotes.count < 2
+
+    prices = stock_quotes.map(&:open)
+
     profits = Array.new(prices.size + 1) { Array.new(prices.size, 0) }
     maximum_transactions = prices.size
 
@@ -31,7 +32,13 @@ class MaximumProfitAnalyzer
       end
     end
 
-    { stock_symbol => profits[maximum_transactions][prices.size - 1] }
+    result(profits[maximum_transactions][prices.size - 1])
+  end
+
+  private
+
+  def result(total)
+    { stock_symbol => total }
   end
 
 end
