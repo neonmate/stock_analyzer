@@ -81,6 +81,7 @@ Or run `ruby scripts/print_summary` to get a summary of all stocks available in 
 
 # Links
 
+* [2020 analysis (until August)](analysis/2020.md)
 * [2019 analysis](analysis/2019.md)
 * [2018 analysis](analysis/2018.md)
 * [2017 analysis](analysis/2017.md)
