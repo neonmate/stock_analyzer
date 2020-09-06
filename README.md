@@ -35,7 +35,7 @@ This program can analyze NASDAQ's historical stock data in terms of profit:
 * Download the `nasdaqlisted.txt` from ftp://ftp.nasdaqtrader.com/symboldirectory, rename it to `nasdaqlisted.csv` and
   place it in the `db/` folder, too.
 
-Now you can analyze a a stock over a given period:
+Now you can analyze a stock over a given period:
 
 ```
 bin/runner "puts StockAnalyzer.new('amzn', start_date: Date.parse('2020-01-01'), end_date: Date.parse('2020-09-01')).analyze_single_trade_profit"
